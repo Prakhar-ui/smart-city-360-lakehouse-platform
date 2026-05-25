@@ -1,0 +1,322 @@
+STREAMING DATA SOURCES
+1. AQI / AIR POLLUTION DATA
+Real Sources
+Source 1 — OpenAQ
+
+Use:
+OpenAQ Platform
+
+API Data:
+
+{
+  "city": "Bengaluru",
+  "pm25": 87,
+  "pm10": 140,
+  "no2": 42,
+  "co": 1.2,
+  "timestamp": "2026-05-25T10:15:00Z"
+}
+Why This Is Valuable
+
+Real-world use:
+
+pollution analytics
+AQI alerts
+asthma-risk zones
+environmental monitoring
+Streaming Frequency
+Every 1 minute
+Ingestion Design
+Producer App
+
+Python FastAPI service:
+
+aqi-producer-service
+
+Responsibilities:
+
+call OpenAQ API
+validate schema
+enrich city metadata
+push to Kafka
+Kafka Topic
+aqi_raw_topic
+Schema Registry
+
+Use:
+
+Confluent Schema Registry
+
+Schema:
+
+{
+  "city": "string",
+  "station_id": "string",
+  "pm25": "float",
+  "pm10": "float",
+  "timestamp": "timestamp"
+}
+Storage
+Bronze
+s3://bronze/aqi/
+Silver
+s3://silver/aqi/
+Gold
+s3://gold/aqi/
+Data Quality Rules
+
+Using:
+
+Great Expectations
+
+Rules:
+
+pm25 >= 0
+pm10 >= 0
+timestamp not null
+city in approved city list
+Governance Metadata
+
+Using:
+
+OpenMetadata
+
+Tags:
+
+domain=environment
+classification=public
+sla=5min
+retention=180days
+2. WEATHER DATA
+Real Sources
+OpenWeatherMap
+
+Use:
+OpenWeatherMap API
+
+Data Collected
+{
+  "temperature": 32,
+  "humidity": 76,
+  "wind_speed": 11,
+  "rainfall": 3.2,
+  "pressure": 1012
+}
+Streaming Frequency
+Every 5 minutes
+Business Use Cases
+flood prediction
+congestion correlation
+rainfall analytics
+heatwave alerts
+Kafka Topic
+weather_raw_topic
+Advanced Feature
+Schema Drift Handling
+
+Suppose API suddenly adds:
+
+"uv_index": 7
+
+Pipeline should:
+
+detect drift
+send alert
+auto approve via config
+
+THIS is senior-level engineering.
+
+3. TRAFFIC DATA
+Real Sources
+TomTom APIs
+
+Use:
+TomTom Traffic APIs
+
+Data Example
+{
+  "road_id": "BLR_102",
+  "avg_speed": 11,
+  "congestion_level": "HIGH",
+  "travel_time": 420
+}
+Streaming Frequency
+Every 30 seconds
+Why This Is Important
+
+Real-time traffic analytics are TRUE streaming systems.
+
+This demonstrates:
+
+low latency pipelines
+watermarking
+event-time processing
+Kafka Topics
+traffic_raw_topic
+traffic_alert_topic
+Spark Streaming Logic
+if avg_speed < 10:
+    trigger_congestion_alert()
+4. GTFS PUBLIC TRANSPORT DATA
+Real Source
+GTFS Feeds
+
+Use:
+
+Bengaluru Metro
+Delhi Metro
+
+GTFS:
+General Transit Feed Specification.
+
+Data Includes
+vehicle positions
+trip updates
+delays
+schedules
+Feed Structure
+{
+  "vehicle_id": "metro_101",
+  "route_id": "blue_line",
+  "latitude": 12.9716,
+  "longitude": 77.5946,
+  "delay_seconds": 120
+}
+Why This Is VERY Valuable
+
+Most portfolio projects NEVER use:
+
+geo-spatial streaming
+transit feeds
+moving vehicle telemetry
+
+This makes your project unique.
+
+Kafka Topic
+metro_live_topic
+Gold Layer Analytics
+
+Build:
+
+metro delay heatmaps
+route congestion
+peak-hour analytics
+5. EV CHARGING TELEMETRY
+Real Sources
+Government EV Datasets
+
+Use:
+
+data.gov.in
+state EV APIs
+
+Data.gov.in Open Government Data Platform
+
+Example Data
+{
+  "station_id": "EV_BLR_101",
+  "available_ports": 2,
+  "occupied_ports": 8,
+  "queue_time": 15
+}
+Streaming Frequency
+Every 2 minutes
+Use Cases
+EV infrastructure planning
+overload prediction
+charging demand heatmaps
+Kafka Topics
+ev_station_topic
+6. SOCIAL MEDIA STREAMING
+Real Sources
+Twitter/X APIs
+News APIs
+
+Use:
+NewsAPI
+
+Why This Matters
+
+Correlate:
+
+public events
+traffic spikes
+pollution spikes
+Example Event
+{
+  "event": "IPL Match",
+  "location": "Bengaluru",
+  "crowd_sentiment": "HIGH",
+  "timestamp": "2026-05-25T18:00:00"
+}
+NLP Enhancements
+
+Use:
+
+sentiment analysis
+keyword extraction
+event detection
+Kafka Topics
+social_event_topic
+BATCH DATA SOURCES
+7. HISTORICAL RAINFALL DATA
+Real Sources
+IMD Data
+Kaggle Government Weather Archives
+Format
+date,city,rainfall_mm
+2025-01-01,Bangalore,12.2
+Why This Matters
+
+Used for:
+
+historical trend analysis
+ML forecasting
+flood prediction
+Storage
+s3://batch/rainfall/
+Airflow DAG
+historical_rainfall_dag
+8. CENSUS DATA
+Real Sources
+Government Census
+
+Use:
+India Government Portal
+
+Data Includes
+population
+literacy
+urban density
+household stats
+Why Valuable
+
+Enriches:
+
+per-capita pollution
+infrastructure density
+demand forecasting
+Batch Frequency
+Monthly refresh
+9. SMART METER DATA
+Realistic Simulation
+
+Since public smart meter APIs are limited:
+
+Create simulator using:
+
+random power usage generation
+Example
+{
+  "meter_id": "SM_1001",
+  "power_consumption": 11.2,
+  "voltage": 231,
+  "timestamp": "2026-05-25T10:00:00"
+}
+Why Important
+
+Demonstrates:
+
+IoT ingestion
+high-throughput streaming
+time-series analytics
