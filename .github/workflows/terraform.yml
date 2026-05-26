@@ -1,0 +1,138 @@
+name: Terraform CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+    paths:
+      - 'terraform/**'
+      - '.github/workflows/**'
+
+  pull_request:
+    branches:
+      - main
+
+env:
+  TF_PLUGIN_CACHE_DIR: ~/.terraform.d/plugin-cache
+
+jobs:
+
+  #################################################
+  # Detect Changes
+  #################################################
+
+  changes:
+    runs-on: ubuntu-latest
+
+    outputs:
+      terraform: ${{ steps.filter.outputs.terraform }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Detect Changed Files
+        uses: dorny/paths-filter@v3
+
+        id: filter
+
+        with:
+          filters: |
+            terraform:
+              - 'terraform/**'
+
+  #################################################
+  # Terraform Deployment
+  #################################################
+
+  terraform:
+    name: Terraform Deploy
+
+    needs: changes
+
+    if: |
+      needs.changes.outputs.terraform == 'true'
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: terraform/environments/dev
+
+    steps:
+
+      #############################################
+      # Checkout
+      #############################################
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      #############################################
+      # Cache Terraform Plugins
+      #############################################
+
+      - name: Cache Terraform Plugins
+        uses: actions/cache@v4
+
+        with:
+          path: ~/.terraform.d/plugin-cache
+
+          key: terraform-${{ runner.os }}-${{ hashFiles('**/.terraform.lock.hcl') }}
+
+      #############################################
+      # Setup Terraform
+      #############################################
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      #############################################
+      # Configure AWS Credentials
+      #############################################
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      #############################################
+      # Terraform Format
+      #############################################
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      #############################################
+      # Terraform Init
+      #############################################
+
+      - name: Terraform Init
+        run: terraform init
+
+      #############################################
+      # Terraform Validate
+      #############################################
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      #############################################
+      # Terraform Plan
+      #############################################
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      #############################################
+      # Terraform Apply
+      #############################################
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+
+        run: terraform apply -auto-approve
