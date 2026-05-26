@@ -29,8 +29,17 @@ jobs:
       terraform: ${{ steps.filter.outputs.terraform }}
 
     steps:
+
+      #############################################
+      # Checkout Code
+      #############################################
+
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      #############################################
+      # Detect Changed Files
+      #############################################
 
       - name: Detect Changed Files
         uses: dorny/paths-filter@v3
@@ -56,6 +65,17 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    #################################################
+    # Terraform Environment Variables
+    #################################################
+
+    env:
+      TF_VAR_key_name: ${{ secrets.TF_VAR_KEY_NAME }}
+
+    #################################################
+    # Working Directory
+    #################################################
+
     defaults:
       run:
         working-directory: terraform/environments/dev
@@ -63,7 +83,7 @@ jobs:
     steps:
 
       #############################################
-      # Checkout
+      # Checkout Code
       #############################################
 
       - name: Checkout Code
@@ -101,7 +121,7 @@ jobs:
           aws-region: ap-south-1
 
       #############################################
-      # Terraform Format
+      # Terraform Format Check
       #############################################
 
       - name: Terraform Format Check
@@ -126,7 +146,7 @@ jobs:
       #############################################
 
       - name: Terraform Plan
-        run: terraform plan -var-file="terraform.tfvars"
+        run: terraform plan
 
       #############################################
       # Terraform Apply
@@ -135,4 +155,4 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
 
-        run: terraform apply -auto-approve -var-file="terraform.tfvars"
+        run: terraform apply -auto-approve
