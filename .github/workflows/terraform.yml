@@ -126,7 +126,7 @@ jobs:
       #############################################
 
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform plan -var-file="terraform.tfvars"
 
       #############################################
       # Terraform Apply
@@ -135,4 +135,4 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
 
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var-file="terraform.tfvars"
