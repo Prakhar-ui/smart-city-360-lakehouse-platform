@@ -87,6 +87,7 @@ domain=environment
 classification=public
 sla=5min
 retention=180days
+
 2. WEATHER DATA
 Real Sources
 OpenWeatherMap
@@ -157,6 +158,7 @@ traffic_alert_topic
 Spark Streaming Logic
 if avg_speed < 10:
     trigger_congestion_alert()
+
 4. GTFS PUBLIC TRANSPORT DATA
 Real Source
 GTFS Feeds
@@ -201,6 +203,7 @@ Build:
 metro delay heatmaps
 route congestion
 peak-hour analytics
+
 5. EV CHARGING TELEMETRY
 Real Sources
 Government EV Datasets
@@ -227,6 +230,7 @@ overload prediction
 charging demand heatmaps
 Kafka Topics
 ev_station_topic
+
 6. SOCIAL MEDIA STREAMING
 Real Sources
 Twitter/X APIs
