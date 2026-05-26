@@ -4,7 +4,7 @@ data "aws_ami" "ubuntu" {
   owners = ["585008079281"]
 
   filter {
-    name   = "name"
+    name = "name"
 
     values = [
       "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"
