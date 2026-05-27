@@ -11,6 +11,10 @@ jobs:
 
     env:
       TF_VAR_key_name: ${{ secrets.TF_VAR_KEY_NAME }}
+      TF_PLUGIN_CACHE_DIR: ~/.terraform.d/plugin-cache
+      TF_VAR_openweather_api_key: ${{ secrets.OPENWEATHER_API_KEY }}
+      TF_VAR_tomtom_api_key: ${{ secrets.MYTOMTOM_API_KEY }}
+      TF_VAR_openaq_api_key: ${{ secrets.OPENAQ_API_KEY }}
 
     defaults:
       run:
