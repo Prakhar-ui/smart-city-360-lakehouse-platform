@@ -1,8 +1,18 @@
 #!/bin/bash
 
-exec > >(tee /var/log/user-data.log|logger -t user-data ) 2>&1
+#############################################
+# Logging
+#############################################
+
+exec > >(tee /var/log/user-data.log | logger -t user-data ) 2>&1
+
+#############################################
+# Strict Mode
+#############################################
 
 set -euxo pipefail
+
+trap 'echo "FAILED at line $LINENO"' ERR
 
 echo "Starting bootstrap..."
 
@@ -21,7 +31,12 @@ apt-get install -y \
   python3-pip \
   docker.io \
   wget \
-  unzip
+  unzip \
+  tar \
+  gzip \
+  curl
+
+echo "Dependencies installed"
 
 #############################################
 # Start Docker
@@ -32,36 +47,47 @@ systemctl start docker
 
 usermod -aG docker ubuntu
 
+echo "Docker configured"
+
 #############################################
 # Create Install Directory
 #############################################
 
 mkdir -p /opt
+
 cd /opt
 
 #############################################
 # Install Kafka
 #############################################
 
-wget https://downloads.apache.org/kafka/3.7.0/kafka_2.13-3.7.0.tgz
+echo "Installing Kafka..."
 
-tar -xzf kafka_2.13-3.7.0.tgz
+wget https://downloads.apache.org/kafka/4.3.0/kafka_2.13-4.3.0.tgz
 
-mv kafka_2.13-3.7.0 kafka
+tar -xzf kafka_2.13-4.3.0.tgz
 
-rm kafka_2.13-3.7.0.tgz
+mv kafka_2.13-4.3.0 kafka
+
+rm kafka_2.13-4.3.0.tgz
+
+echo "Kafka installed"
 
 #############################################
 # Install Spark
 #############################################
 
-wget https://downloads.apache.org/spark/spark-3.5.1/spark-3.5.1-bin-hadoop3.tgz
+echo "Installing Spark..."
 
-tar -xzf spark-3.5.1-bin-hadoop3.tgz
+wget https://downloads.apache.org/spark/spark-4.1.2/spark-4.1.2-bin-hadoop3.tgz
 
-mv spark-3.5.1-bin-hadoop3 spark
+tar -xzf spark-4.1.2-bin-hadoop3.tgz
 
-rm spark-3.5.1-bin-hadoop3.tgz
+mv spark-4.1.2-bin-hadoop3 spark
+
+rm spark-4.1.2-bin-hadoop3.tgz
+
+echo "Spark installed"
 
 #############################################
 # Install Python Libraries
@@ -74,6 +100,8 @@ pip3 install \
   pandas \
   requests
 
+echo "Python libraries installed"
+
 #############################################
 # Environment Variables
 #############################################
@@ -82,9 +110,12 @@ cat <<EOF >> /etc/profile
 
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 export SPARK_HOME=/opt/spark
+export KAFKA_HOME=/opt/kafka
 export PATH=\$PATH:/opt/kafka/bin:/opt/spark/bin
 
 EOF
+
+echo "Environment variables configured"
 
 #############################################
 # Permissions
@@ -92,6 +123,16 @@ EOF
 
 chown -R ubuntu:ubuntu /opt/kafka
 chown -R ubuntu:ubuntu /opt/spark
+
+echo "Permissions updated"
+
+#############################################
+# Verification
+#############################################
+
+java -version
+
+ls -lah /opt
 
 #############################################
 # Completion Marker
