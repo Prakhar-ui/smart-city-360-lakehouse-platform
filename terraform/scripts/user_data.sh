@@ -103,6 +103,24 @@ pip3 install \
 echo "Python libraries installed"
 
 #############################################
+# Create Environment File
+#############################################
+
+mkdir -p /home/ubuntu/smartcity360
+
+cat <<EOF > /home/ubuntu/smartcity360/.env
+OPENWEATHER_API_KEY=${openweather_api_key}
+TOMTOM_API_KEY=${tomtom_api_key}
+OPENAQ_API_KEY=${openaq_api_key}
+EOF
+
+chown ubuntu:ubuntu /home/ubuntu/smartcity360/.env
+
+chmod 600 /home/ubuntu/smartcity360/.env
+
+echo ".env file created"
+
+#############################################
 # Environment Variables
 #############################################
 
