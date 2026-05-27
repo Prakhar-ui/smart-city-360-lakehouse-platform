@@ -63,13 +63,13 @@ cd /opt
 
 echo "Installing Kafka..."
 
-wget https://downloads.apache.org/kafka/4.3.0/kafka_2.13-4.3.0.tgz
+wget https://downloads.apache.org/kafka/3.9.2/kafka_2.13-3.9.2.tgz
 
-tar -xzf kafka_2.13-4.3.0.tgz
+tar -xzf kafka_2.13-3.9.2.tgz
 
-mv kafka_2.13-4.3.0 kafka
+mv kafka_2.13-3.9.2 kafka
 
-rm kafka_2.13-4.3.0.tgz
+rm kafka_2.13-3.9.2.tgz
 
 echo "Kafka installed"
 
