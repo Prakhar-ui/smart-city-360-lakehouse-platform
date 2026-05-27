@@ -27,7 +27,7 @@ apt-get update -y
 #############################################
 
 apt-get install -y \
-  openjdk-11-jdk \
+  openjdk-17-jdk \
   python3-pip \
   docker.io \
   wget \
@@ -108,7 +108,7 @@ echo "Python libraries installed"
 
 cat <<EOF >> /etc/profile
 
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 export SPARK_HOME=/opt/spark
 export KAFKA_HOME=/opt/kafka
 export PATH=\$PATH:/opt/kafka/bin:/opt/spark/bin
