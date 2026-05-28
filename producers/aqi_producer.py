@@ -12,8 +12,10 @@ from common.kafka_client import (
 )
 
 from common.config import (
-    OPENAQ_API_KEY,
-    CITY
+    OPENWEATHER_API_KEY,
+    CITY,
+    LATITUDE,
+    LONGITUDE
 )
 
 TOPIC = "aqi_raw"
@@ -21,17 +23,15 @@ TOPIC = "aqi_raw"
 INTERVAL_SECONDS = 60
 
 URL = (
-    "https://api.openaq.org/v2/latest"
+    "http://api.openweathermap.org/"
+    "data/2.5/air_pollution"
 )
-
-HEADERS = {
-    "X-API-Key":
-        OPENAQ_API_KEY
-}
 
 class AQISchema(BaseModel):
 
     city: str
+
+    aqi: int
 
     pm25: float
 
@@ -41,53 +41,37 @@ class AQISchema(BaseModel):
 
 def fetch_aqi_data():
 
+    params = {
+        "lat": LATITUDE,
+        "lon": LONGITUDE,
+        "appid": OPENWEATHER_API_KEY
+    }
+
     response = requests.get(
         URL,
-        headers=HEADERS,
-        params={"city": CITY},
+        params=params,
         timeout=30
     )
 
     response.raise_for_status()
 
-    data = response.json()
-
-    measurements = (
-        data["results"][0]
-        ["measurements"]
-    )
-
-    pm25 = next(
-        (
-            item["value"]
-            for item in measurements
-            if item["parameter"]
-            == "pm25"
-        ),
-        0
-    )
-
-    pm10 = next(
-        (
-            item["value"]
-            for item in measurements
-            if item["parameter"]
-            == "pm10"
-        ),
-        0
-    )
+    data = response.json()["list"][0]
 
     return {
 
         "city": CITY,
 
-        "pm25": pm25,
+        "aqi":
+            data["main"]["aqi"],
 
-        "pm10": pm10,
+        "pm25":
+            data["components"]["pm2_5"],
+
+        "pm10":
+            data["components"]["pm10"],
 
         "timestamp":
-            datetime.utcnow()
-            .isoformat()
+            datetime.utcnow().isoformat()
     }
 
 def run():
@@ -107,7 +91,7 @@ def run():
             validated_data = (
                 AQISchema(
                     **raw_data
-                ).model_dump()
+                ).model_dump(mode="json")
             )
 
             send_to_kafka(

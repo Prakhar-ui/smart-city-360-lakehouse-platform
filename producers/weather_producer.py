@@ -99,7 +99,7 @@ def run():
             validated_data = (
                 WeatherSchema(
                     **raw_data
-                ).model_dump()
+                ).model_dump(mode="json")
             )
 
             send_to_kafka(

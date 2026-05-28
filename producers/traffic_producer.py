@@ -97,8 +97,7 @@ def fetch_traffic_data():
             congestion_percentage,
 
         "timestamp":
-            datetime.utcnow()
-            .isoformat()
+            datetime.utcnow().isoformat()
     }
 
 def run():
@@ -118,7 +117,7 @@ def run():
             validated_data = (
                 TrafficSchema(
                     **raw_data
-                ).model_dump()
+                ).model_dump(mode="json")
             )
 
             send_to_kafka(
