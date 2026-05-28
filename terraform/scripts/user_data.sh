@@ -30,7 +30,6 @@ apt-get install -y \
   openjdk-17-jdk \
   python3-pip \
   docker.io \
-  docker-compose-plugin \
   wget \
   unzip \
   tar \
@@ -38,6 +37,20 @@ apt-get install -y \
   curl
 
 echo "Dependencies installed"
+
+#############################################
+# Install Docker Compose
+#############################################
+
+curl -SL \
+https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 \
+-o /usr/local/bin/docker-compose
+
+chmod +x /usr/local/bin/docker-compose
+
+ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+echo "Docker Compose installed"
 
 #############################################
 # Start Docker
@@ -80,13 +93,13 @@ echo "Kafka installed"
 
 echo "Installing Spark..."
 
-wget https://downloads.apache.org/spark/spark-4.1.2/spark-4.1.2-bin-hadoop3.tgz
+wget https://downloads.apache.org/spark/spark-3.5.8/spark-3.5.8-bin-hadoop3.tgz
 
-tar -xzf spark-4.1.2-bin-hadoop3.tgz
+tar -xzf spark-3.5.8-bin-hadoop3.tgz
 
-mv spark-4.1.2-bin-hadoop3 spark
+mv spark-3.5.8-bin-hadoop3 spark
 
-rm spark-4.1.2-bin-hadoop3.tgz
+rm spark-3.5.8-bin-hadoop3.tgz
 
 echo "Spark installed"
 
