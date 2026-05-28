@@ -30,6 +30,7 @@ apt-get install -y \
   openjdk-17-jdk \
   python3-pip \
   docker.io \
+  docker-compose-plugin \
   wget \
   unzip \
   tar \
