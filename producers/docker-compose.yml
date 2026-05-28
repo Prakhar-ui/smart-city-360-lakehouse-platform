@@ -1,0 +1,52 @@
+services:
+
+  weather-producer:
+
+    build: .
+
+    container_name:
+      weather-producer
+
+    command:
+      python weather_producer.py
+
+    env_file:
+      - /home/ubuntu/smartcity360/.env
+
+    network_mode: host
+
+    restart: unless-stopped
+
+  aqi-producer:
+
+    build: .
+
+    container_name:
+      aqi-producer
+
+    command:
+      python aqi_producer.py
+
+    env_file:
+      - /home/ubuntu/smartcity360/.env
+
+    network_mode: host
+
+    restart: unless-stopped
+
+  traffic-producer:
+
+    build: .
+
+    container_name:
+      traffic-producer
+
+    command:
+      python traffic_producer.py
+
+    env_file:
+      - /home/ubuntu/smartcity360/.env
+
+    network_mode: host
+
+    restart: unless-stopped
