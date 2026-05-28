@@ -167,6 +167,24 @@ java -version
 ls -lah /opt
 
 #############################################
+# Validation Checks
+#############################################
+
+docker --version
+
+docker-compose --version
+
+java -version
+
+test -d /opt/kafka
+
+test -d /opt/spark
+
+test -f /home/ubuntu/smartcity360/.env
+
+echo "All validation checks passed"
+
+#############################################
 # Completion Marker
 #############################################
 
