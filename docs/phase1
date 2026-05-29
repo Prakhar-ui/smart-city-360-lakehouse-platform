@@ -170,7 +170,7 @@ Read Kafka streams.
 
 Write to:
 
-s3://smartcity/bronze/
+s3://smartcity360-datalake-dev/bronze/
 Step 5 — Silver Transformations
 
 Apply:
@@ -181,7 +181,7 @@ schema standardization
 
 Store:
 
-s3://smartcity/silver/
+s3://smartcity360-datalake-dev/silver/
 Step 6 — Airflow
 
 Orchestrate:
