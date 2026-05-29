@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "terraform/**"
 
 jobs:
   terraform:
@@ -21,7 +23,6 @@ jobs:
         working-directory: terraform/environments/dev
 
     steps:
-
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -30,7 +31,6 @@ jobs:
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
-
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -39,8 +39,8 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Format
-        run: terraform fmt -recursive
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
 
       - name: Terraform Validate
         run: terraform validate
