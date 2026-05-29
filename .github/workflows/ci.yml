@@ -38,10 +38,6 @@ jobs:
   spark-tests:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: spark
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -56,41 +52,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyspark pytest
 
-
-      - name: Debug Directory Structure
-        run: |
-          echo "Current directory:"
-          pwd
-
-          echo ""
-          echo "Files in current directory:"
-          ls -la
-
-          echo ""
-          echo "Repository structure:"
-          find . -type f | sort
-      - name: Debug Python Path
-        run: |
-          pwd
-
-          echo "===================="
-          echo "Files"
-          find . -type f | sort
-
-          echo "===================="
-          echo "Python Path"
-          python -c "
-          import os
-          import sys
-
-          print('cwd=', os.getcwd())
-          print()
-          print('sys.path=')
-
-          for p in sys.path:
-              print(p)
-          "
-
       - name: Run Spark Tests
         run: |
-          pytest tests -v
+          pytest spark/tests -v
