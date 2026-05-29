@@ -25,13 +25,13 @@ resource "aws_instance" "streaming_server" {
   iam_instance_profile = var.instance_profile_name
 
   user_data = templatefile(
-  "${path.module}/../../scripts/user_data.sh",
-  {
-    openweather_api_key = var.openweather_api_key
-    tomtom_api_key      = var.tomtom_api_key
-    openaq_api_key      = var.openaq_api_key
-  }
-)
+    "${path.module}/../../scripts/user_data.sh",
+    {
+      openweather_api_key = var.openweather_api_key
+      tomtom_api_key      = var.tomtom_api_key
+      openaq_api_key      = var.openaq_api_key
+    }
+  )
 
   user_data_replace_on_change = true
 

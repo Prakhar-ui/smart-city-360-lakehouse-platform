@@ -13,6 +13,16 @@ resource "aws_iam_role" "ec2_role" {
         Principal = {
           Service = "ec2.amazonaws.com"
         }
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "s3:*"
+        ],
+        "Resource" : [
+          "arn:aws:s3:::smartcity360-datalake-dev",
+          "arn:aws:s3:::smartcity360-datalake-dev/*"
+        ]
       }
     ]
   })

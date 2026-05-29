@@ -27,7 +27,7 @@ module "ec2" {
   security_group_id     = module.security_group.security_group_id
   instance_profile_name = module.iam.instance_profile_name
 
-  openweather_api_key   = var.openweather_api_key
-  tomtom_api_key        = var.tomtom_api_key
-  openaq_api_key        = var.openaq_api_key
+  openweather_api_key = var.openweather_api_key
+  tomtom_api_key      = var.tomtom_api_key
+  openaq_api_key      = var.openaq_api_key
 }
