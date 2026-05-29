@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 
-from aqi_stream import (
+from spark.aqi_stream import (
     transform_aqi
 )
 
