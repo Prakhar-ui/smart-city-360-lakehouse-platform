@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 
-from spark.weather_stream import (
+from weather_stream import (
     transform_weather
 )
 

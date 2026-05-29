@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 
-from spark.traffic_stream import (
+from traffic_stream import (
     transform_traffic
 )
 
