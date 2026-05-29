@@ -56,6 +56,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyspark pytest
 
+
+      - name: Debug Directory Structure
+        run: |
+          echo "Current directory:"
+          pwd
+
+          echo ""
+          echo "Files in current directory:"
+          ls -la
+
+          echo ""
+          echo "Repository structure:"
+          find . -type f | sort
+
       - name: Run Spark Tests
         run: |
           pytest tests -v
