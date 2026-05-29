@@ -13,15 +13,28 @@ resource "aws_iam_role" "ec2_role" {
         Principal = {
           Service = "ec2.amazonaws.com"
         }
-      },
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "s3_access" {
+  name = "${var.project_name}-s3-access"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = [
       {
-        "Effect" : "Allow",
-        "Action" : [
+        Effect = "Allow"
+
+        Action = [
           "s3:*"
-        ],
-        "Resource" : [
+        ]
+
+        Resource = [
           "arn:aws:s3:::smartcity360-datalake-dev",
-          "arn:aws:s3:::smartcity360-datalake-dev/*"
+          "arn:aws:s3:::smartcity360-datalake-dev/*",
         ]
       }
     ]
@@ -30,7 +43,7 @@ resource "aws_iam_role" "ec2_role" {
 
 resource "aws_iam_role_policy_attachment" "s3_access" {
   role       = aws_iam_role.ec2_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+  policy_arn = aws_iam_policy.s3_access.arn
 }
 
 resource "aws_iam_instance_profile" "instance_profile" {
