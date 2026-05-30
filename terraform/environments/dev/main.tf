@@ -14,7 +14,9 @@ module "security_group" {
 module "iam" {
   source = "../../modules/iam"
 
-  project_name = var.project_name
+  project_name     = var.project_name
+  environment      = var.environment
+  data_lake_bucket = module.s3.bucket_name
 }
 
 module "ec2" {
@@ -35,8 +37,8 @@ module "ec2" {
 module "glue" {
   source = "../../modules/glue"
 
-  project_name = var.project_name
-  environment  = var.environment
-
-  data_lake_bucket = module.s3.bucket_name
+  project_name  = var.project_name
+  environment   = var.environment
+  bucket_name   = module.s3.bucket_name
+  glue_role_arn = module.iam.glue_role_arn
 }
