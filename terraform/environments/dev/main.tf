@@ -16,7 +16,7 @@ module "iam" {
 
   project_name     = var.project_name
   environment      = var.environment
-  data_lake_bucket = module.s3.bucket_name
+  data_lake_bucket = module.s3.data_lake_bucket
 }
 
 module "ec2" {
@@ -39,6 +39,6 @@ module "glue" {
 
   project_name  = var.project_name
   environment   = var.environment
-  bucket_name   = module.s3.bucket_name
-  glue_role_arn = module.iam.glue_role_arn
+  data_lake_bucket   = module.s3.data_lake_bucket
+  glue_crawler_role_arn = module.iam.glue_crawler_role_arn
 }
