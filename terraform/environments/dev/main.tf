@@ -31,3 +31,12 @@ module "ec2" {
   tomtom_api_key      = var.tomtom_api_key
   openaq_api_key      = var.openaq_api_key
 }
+
+module "glue" {
+  source = "../../modules/glue"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  data_lake_bucket = module.s3.bucket_name
+}
