@@ -1,7 +1,3 @@
 output "bucket_name" {
   value = aws_s3_bucket.data_lake.bucket
 }
-
-output "bucket_name" {
-  value = aws_s3_bucket.data_lake.arn
-}
