@@ -37,8 +37,8 @@ module "ec2" {
 module "glue" {
   source = "../../modules/glue"
 
-  project_name  = var.project_name
-  environment   = var.environment
-  data_lake_bucket   = module.s3.data_lake_bucket
+  project_name          = var.project_name
+  environment           = var.environment
+  data_lake_bucket      = module.s3.data_lake_bucket
   glue_crawler_role_arn = module.iam.glue_crawler_role_arn
 }
