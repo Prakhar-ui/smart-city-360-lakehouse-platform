@@ -1,67 +1,50 @@
 #!/bin/bash
 
 echo ""
-echo "========================================"
+echo "=================================="
 echo "Smart City 360 Pipeline Status"
-echo "========================================"
+echo "=================================="
 
-########################################
-# ZooKeeper
-########################################
+check_service() {
 
-echo ""
-echo "ZooKeeper"
+    SERVICE_NAME=$1
+    PROCESS=$2
 
-ps -ef | grep zookeeper | grep -v grep
+    if pgrep -f "$PROCESS" > /dev/null
+    then
+        echo "✅ $SERVICE_NAME : RUNNING"
+    else
+        echo "❌ $SERVICE_NAME : STOPPED"
+    fi
+}
 
-########################################
-# Kafka
-########################################
+check_container() {
 
-echo ""
-echo "Kafka Broker"
+    CONTAINER=$1
 
-ps -ef | grep kafka.Kafka | grep -v grep
+    if docker ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"
+    then
+        echo "✅ $CONTAINER : RUNNING"
+    else
+        echo "❌ $CONTAINER : STOPPED"
+    fi
+}
 
-########################################
-# Spark
-########################################
+check_service "ZooKeeper" "QuorumPeerMain"
 
-echo ""
-echo "Weather Stream"
+check_service "Kafka Broker" "kafka.Kafka"
 
-ps -ef | grep weather_stream.py | grep -v grep
+check_container "weather-producer"
 
-echo ""
-echo "AQI Stream"
+check_container "aqi-producer"
 
-ps -ef | grep aqi_stream.py | grep -v grep
+check_container "traffic-producer"
 
-echo ""
-echo "Traffic Stream"
+check_service "Weather Stream" "weather_stream.py"
 
-ps -ef | grep traffic_stream.py | grep -v grep
+check_service "AQI Stream" "aqi_stream.py"
 
-########################################
-# Docker
-########################################
-
-echo ""
-echo "Producer Containers"
-
-docker ps --format "table {{.Names}}\t{{.Status}}"
-
-########################################
-# Kafka Port
-########################################
+check_service "Traffic Stream" "traffic_stream.py"
 
 echo ""
-echo "Kafka Port"
-
-sudo ss -tulpn | grep 9092 || true
-
-echo ""
-echo "========================================"
-echo "Status Check Complete"
-echo "========================================"
-echo ""
+echo "=================================="
